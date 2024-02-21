@@ -9,6 +9,10 @@ number-sections: true
 toc: true
 ---
 
+# Acknowledgements
+
+I acknowledge Sakhil for his insightful feedback.
+
 # Introduction
 
 In the realm of data analysis, the journey from data collection to insight is fraught with potential pitfalls that can skew results and lead to erroneous conclusions. This paper delves into a simulated scenario that encapsulates common issues faced during data handling and analysis, including instrument limitations, human error in data cleaning, and the statistical methodologies employed to extract meaningful insights from flawed datasets.
