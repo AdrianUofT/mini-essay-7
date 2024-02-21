@@ -1,0 +1,103 @@
+---
+title: "Navigating the Perils of Data Integrity: A Simulation Study on the Impact of Collection and Preparation Errors on Statistical Analysis"
+author: "Adrian Ly"
+date: "2024-02-21"
+thanks: "Code: https://github.com/AdrianUofT/mini-essay-7"
+format: pdf
+abstract: "This study explores the impact of data collection and preparation errors on statistical analysis through a simulated dataset, intended to reflect real-world challenges in data integrity. The simulation involved generating 1000 observations from a normal distribution, subsequently introducing instrument memory limitations and manual data cleaning errors, including sign changes and decimal place shifts. Statistical analysis, specifically a one-sample t-test, was employed to assess the hypothesis that the true mean of the data generating process is greater than zero, despite the introduced errors. The findings underscore the significance of rigorous data handling and validation in preserving the reliability of research conclusions, highlighting the need for robust protocols to detect and mitigate such issues."
+number-sections: true
+toc: true
+---
+
+# Introduction
+
+In the realm of data analysis, the journey from data collection to insight is fraught with potential pitfalls that can skew results and lead to erroneous conclusions. This paper delves into a simulated scenario that encapsulates common issues faced during data handling and analysis, including instrument limitations, human error in data cleaning, and the statistical methodologies employed to extract meaningful insights from flawed datasets.
+
+The simulation begins with a dataset purportedly drawn from a normal distribution, reflecting a common assumption in many statistical analyses. However, this dataset is subjected to a series of deliberate errors to mimic real-world challenges: an instrument with limited memory capacity leading to data overwriting, and mishaps during the data cleaning process, such as the inadvertent alteration of data values. These errors serve as a backdrop to explore the resilience of statistical analysis techniques and the critical importance of data integrity.
+
+Through the examination of these simulated errors and their impact on the subsequent analysis, this paper aims to shed light on the often-underestimated role of rigorous data handling and validation protocols in ensuring the validity of research findings. By dissecting the steps taken to address and analyze the corrupted dataset, we aim to underscore the need for robust data management practices and the implementation of safeguards against common data issues.
+
+# Code Setup
+
+```{r}
+#| echo: TRUE
+# Set seed for reproducibility
+set.seed(123)
+
+# Simulate 1000 observations from a Normal distribution (mean = 1, sd = 1)
+observations <- rnorm(1000, mean = 1, sd = 1)
+
+# Due to instrument error, the last 100 observations are overwritten with the first 100
+observations[901:1000] <- observations[1:100]
+
+```
+
+This code will generate 1000 observations from a normal distribution with a mean of 1 and a standard deviation of 1. Due to the simulated instrument error, the final 100 observations will be a repeat of the first 100, mimicking the overwriting issue caused by the instrument's memory limitation.
+
+```{r}
+#| echo: TRUE
+# Research assistant accidentally changes half of the negative values to positive
+neg_indices <- which(observations < 0)  # Indices of negative observations
+num_to_change <- length(neg_indices) %/% 2  # Half of the negative observations
+change_indices <- sample(neg_indices, num_to_change)  # Randomly select half of the negative observations
+observations[change_indices] <- abs(observations[change_indices])  # Change to positive
+```
+
+This code now includes a step where half of the negative values in the observations vector are randomly selected and their signs are changed to positive, simulating the accidental data modification by the research assistant.
+
+```{r}
+#| echo: TRUE
+# Research assistant accidentally changes half of the negative values to positive
+decimal_change_indices <- which(observations >= 1 & observations < 1.1)
+observations[decimal_change_indices] <- observations[decimal_change_indices] / 10
+```
+
+This code now includes the accidental adjustment of the decimal place for values between 1 and 1.1, simulating the final error introduced by the research assistant. Values within this range are divided by 10, effectively moving the decimal place one position to the left.
+
+```{r}
+#| echo: TRUE
+# Perform a one-sample t-test to test if the mean of the data is greater than 0
+t_test_result <- t.test(observations, mu = 0, alternative = "greater")
+```
+
+This code will output the result of the one-sample t-test, which includes the t-statistic, degrees of freedom, and p-value. The p-value will help us determine whether we can reject the null hypothesis in favor of the alternative hypothesis that the true mean is greater than 0. If the p-value is less than the chosen significance level (commonly 0.05), we reject the null hypothesis, suggesting that the mean of the true data generating process is indeed greater than 0.
+
+# Discussion
+
+The process of data analysis often involves a meticulous examination of the underlying data, identifying potential issues, and employing statistical methods to derive insights. In this particular case, the journey began with a simulated dataset meant to represent observations from a normal distribution, characterized by a mean of 1 and a standard deviation of 1. The intention was to explore the impact of specific errors on the dataset and understand the implications for statistical analysis.
+
+## Simulation and Data Errors
+The simulation involved generating 1000 observations from the specified normal distribution. However, a unique constraint was introduced to mimic an instrument error: the device collecting the data had a limited memory capacity, which resulted in the overwriting of the final 100 observations with the first 100. This scenario posed the first challenge, as such a repetition could potentially skew the analysis by introducing a non-random element to the dataset.
+
+Further complexity was added by the actions of a research assistant tasked with cleaning the data. Unbeknownst to the researchers, two critical errors were made during this phase:
+
+1) Half of the negative observations were inadvertently changed to positive values, altering the dataset's distribution and potentially affecting its central tendency and variability.
+2) Values within the range of 1 to 1.1 had their decimal places mistakenly shifted, such that a value like 1.1 would be recorded as 0.11, introducing a systematic bias towards lower values within this specific range.
+
+## Analysis and Findings
+Despite these issues, the analysis proceeded with a one-sample t-test, aiming to determine whether the mean of the true data-generating process was greater than 0. The test yielded a t-value of 36.328 and a p-value significantly less than the conventional alpha level of 0.05, leading to the rejection of the null hypothesis. This result strongly suggested that the mean of the data, even with the errors, was significantly greater than 0.
+
+## Impact of the Issues
+The errors introduced into the dataset had the potential to significantly impact the findings. The overwriting of data points could reduce the variability and artificially inflate the significance of the findings, as repeated observations do not provide new information. The conversion of negative values to positive would likely shift the mean upwards, making it appear as though the true mean of the data was higher than it might be in a more accurately collected dataset. Lastly, the decimal place error could introduce a downward bias in a subset of the data, although its limited range (1 to 1.1) might mitigate its overall impact.
+
+## Mitigating Measures
+To safeguard against such issues in actual analyses, several measures can be implemented:
+
+1) Data Integrity Checks: Regular audits and checks should be conducted at various stages of data collection and cleaning to ensure that the data remains true to its source. Automated scripts could be used to identify unusual patterns, such as repeated sequences that might indicate overwriting.
+
+2) Validation Procedures: Whenever data is manually handled or manipulated, validation procedures should be in place to double-check the alterations. This could involve random sampling of the data to verify changes or employing checksums to ensure data consistency pre- and post-manipulation.
+
+3) Anomaly Detection: Statistical methods and machine learning models can be employed to detect anomalies in the dataset that deviate significantly from expected patterns. These could flag issues like the sudden appearance of repeated values or unexpected shifts in data ranges.
+
+4) Training and Protocols: Ensuring that all individuals involved in data handling are adequately trained and aware of the protocols can significantly reduce human error. Regular training sessions and clear, accessible documentation can support this.
+
+5) Robust Statistical Methods: Employing statistical methods that are robust to outliers and certain types of data errors can also help mitigate the impact of such issues. Exploratory data analysis should precede formal testing to identify and address potential anomalies.
+
+# Conclusion
+In conclusion, the exploration of data integrity through the lens of a simulated dataset has illuminated the multifaceted challenges inherent in the journey from data collection to statistical analysis. The introduction of deliberate errors, including instrument memory limitations and inaccuracies during data cleaning, serves as a potent reminder of the myriad ways in which data can be compromised. The subsequent analysis, despite these obstacles, underscores the robust nature of statistical methodologies, particularly the one-sample t-test, in extracting meaningful insights from flawed data. However, this resilience should not be misconstrued as a safeguard against all forms of error.
+
+The impact of the simulated errors—data overwriting and inadvertent alterations—highlights a critical aspect of data analysis: the reliability of research findings is inextricably linked to the integrity of the underlying data. While statistical methods can often accommodate and adjust for certain types of errors, the compounded effect of multiple errors, as demonstrated in this simulation, can significantly distort the analysis. This distortion not only risks misleading conclusions but also undermines the credibility of the research.
+
+To combat these challenges, the study advocates for a multi-pronged approach to data management. Rigorous data integrity checks, validation procedures, anomaly detection mechanisms, and comprehensive training for individuals involved in data handling emerge as indispensable tools in this endeavor. Moreover, the adoption of statistical methods that are robust to outliers and data anomalies can provide an additional layer of protection against the insidious effects of data errors.
+
+Ultimately, this paper calls for a heightened awareness of the pivotal role that data integrity plays in the validity of research outcomes. It is a clarion call to researchers to institute stringent data management protocols and to approach data analysis with a critical eye, ever mindful of the potential pitfalls that lie in wait. In doing so, we not only safeguard the integrity of our research but also uphold the standards of scientific inquiry, ensuring that our conclusions are both reliable and reproducible.
