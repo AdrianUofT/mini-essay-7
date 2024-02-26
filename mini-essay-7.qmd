@@ -2,7 +2,8 @@
 title: "Navigating the Perils of Data Integrity: A Simulation Study on the Impact of Collection and Preparation Errors on Statistical Analysis"
 author: "Adrian Ly"
 date: today
-thanks: "Code: https://github.com/AdrianUofT/mini-essay-7"
+date-format: long
+thanks: "Code and data are available at: https://github.com/AdrianUofT/mini-essay-7"
 format: pdf
 abstract: "This study explores the impact of data collection and preparation errors on statistical analysis through a simulated dataset, intended to reflect real-world challenges in data integrity. The simulation involved generating 1000 observations from a normal distribution, subsequently introducing instrument memory limitations and manual data cleaning errors, including sign changes and decimal place shifts. Statistical analysis, specifically a one-sample t-test, was employed to assess the hypothesis that the true mean of the data generating process is greater than zero, despite the introduced errors. The findings underscore the significance of rigorous data handling and validation in preserving the reliability of research conclusions, highlighting the need for robust protocols to detect and mitigate such issues."
 number-sections: true
@@ -11,7 +12,7 @@ toc: true
 
 # Acknowledgements
 
-I acknowledge Sakhil Goel for his insightful feedback.
+I would like to extend my heartfelt thanks to Sakhil for his invaluable peer review of my work. His insightful feedback and constructive criticism have been instrumental in refining my analysis and enhancing the overall quality of my presentation. Sakhil's keen eye for detail and deep understanding of the subject matter have not only helped in identifying areas for improvement but also in elevating the depth and clarity of my narrative. I am truly grateful for his contributions and the time he dedicated to this endeavor.
 
 # Introduction
 
